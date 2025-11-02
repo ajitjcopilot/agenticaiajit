@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: qdrant
+    restart: unless-stopped
+    ports:
+      - "6333:6333"   # HTTP API
+      - "6334:6334"   # gRPC (optional)
+    volumes:
+      - ./qdrant_storage:/qdrant/storage
+      - ./qdrant_config:/qdrant/config
+    environment:
+      - QDRANT__SERVICE__HTTP_PORT=6333
+      - QDRANT__SERVICE__GRPC_PORT=6334
+      - QDRANT__LOG_LEVEL=INFO
+      # You can tune performance parameters below as needed
+      - QDRANT__STORAGE__PERFORMANCE__MAX_SEARCH_THREADS=0
+      - QDRANT__STORAGE__PERFORMANCE__MAX_OPTIMIZATION_THREADS=0
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6333/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+  valkey:
+    image: valkey/valkey:latest
+    container_name: valkey
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - valkey_data:/data
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+volumes:
+  valkey_data:
