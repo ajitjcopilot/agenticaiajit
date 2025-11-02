@@ -16,10 +16,31 @@ A Python project for experimenting with GenAI models including OpenAI GPT and Go
 
 ## Setup
 
-1. Install dependencies:
+### Prerequisites
+
+Install `uv` if you haven't already:
 ```bash
-pip install -r requirements.txt
+curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
+
+Or with pip:
+```bash
+pip install uv
+```
+
+### Installation
+
+1. Install dependencies with uv:
+```bash
+uv sync
+```
+
+This will:
+- Create a virtual environment automatically (`.venv/`)
+- Install all project dependencies
+- Generate a `uv.lock` file for reproducible installs
+
+**Note:** The `uv.lock` file should be committed to version control for reproducible builds.
 
 2. Set up environment variables in a `.env` file:
 ```
@@ -40,8 +61,23 @@ This will start:
 
 Run the main script:
 ```bash
+uv run python main.py
+```
+
+Or activate the virtual environment first:
+```bash
+source .venv/bin/activate  # On macOS/Linux
+# or
+.venv\Scripts\activate  # On Windows
 python main.py
 ```
+
+## Managing Dependencies
+
+- Add a new dependency: `uv add package-name`
+- Remove a dependency: `uv remove package-name`
+- Update dependencies: `uv lock --upgrade`
+- Sync dependencies: `uv sync`
 
 ## Project Structure
 
